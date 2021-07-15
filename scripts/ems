@@ -1,0 +1,213 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.1
+-- Dumped by pg_dump version 13.1
+
+-- Started on 2020-12-13 03:09:04
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 626 (class 1247 OID 17105)
+-- Name: enum_Employee_status; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public."enum_Employee_status" AS ENUM (
+    'ACTIVE',
+    'INACTIVE',
+    'QUIT'
+);
+
+
+ALTER TYPE public."enum_Employee_status" OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 203 (class 1259 OID 17152)
+-- Name: Compensation; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Compensation" (
+    id integer NOT NULL,
+    employee_id integer,
+    updated_time timestamp with time zone DEFAULT '2020-12-13 01:56:42.872+05:30'::timestamp with time zone NOT NULL,
+    salary_paid numeric(10,2) NOT NULL
+);
+
+
+ALTER TABLE public."Compensation" OWNER TO postgres;
+
+--
+-- TOC entry 202 (class 1259 OID 17150)
+-- Name: Compensation_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Compensation_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Compensation_id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 3008 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: Compensation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Compensation_id_seq" OWNED BY public."Compensation".id;
+
+
+--
+-- TOC entry 201 (class 1259 OID 17140)
+-- Name: Employee; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Employee" (
+    id integer NOT NULL,
+    "firstName" character varying(255) NOT NULL,
+    "lastName" character varying(255) NOT NULL,
+    age character varying(255) NOT NULL,
+    address character varying(255) NOT NULL,
+    status public."enum_Employee_status" DEFAULT 'INACTIVE'::public."enum_Employee_status" NOT NULL
+);
+
+
+ALTER TABLE public."Employee" OWNER TO postgres;
+
+--
+-- TOC entry 200 (class 1259 OID 17138)
+-- Name: Employee_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Employee_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Employee_id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 3009 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: Employee_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Employee_id_seq" OWNED BY public."Employee".id;
+
+
+--
+-- TOC entry 2862 (class 2604 OID 17155)
+-- Name: Compensation id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Compensation" ALTER COLUMN id SET DEFAULT nextval('public."Compensation_id_seq"'::regclass);
+
+
+--
+-- TOC entry 2860 (class 2604 OID 17143)
+-- Name: Employee id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Employee" ALTER COLUMN id SET DEFAULT nextval('public."Employee_id_seq"'::regclass);
+
+
+--
+-- TOC entry 3002 (class 0 OID 17152)
+-- Dependencies: 203
+-- Data for Name: Compensation; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Compensation" (id, employee_id, updated_time, salary_paid) FROM stdin;
+6	1002	2020-12-12 21:56:42.872+05:30	12000.00
+2	1002	2020-08-12 21:56:42.872+05:30	12000.00
+3	1002	2020-09-12 21:56:42.872+05:30	12500.00
+4	1002	2020-10-12 21:56:42.872+05:30	11500.00
+5	1002	2020-11-12 21:56:42.872+05:30	12500.00
+\.
+
+
+--
+-- TOC entry 3000 (class 0 OID 17140)
+-- Dependencies: 201
+-- Data for Name: Employee; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Employee" (id, "firstName", "lastName", age, address, status) FROM stdin;
+1002	laxman	Rai	26		INACTIVE
+\.
+
+
+--
+-- TOC entry 3010 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: Compensation_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Compensation_id_seq"', 6, true);
+
+
+--
+-- TOC entry 3011 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: Employee_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Employee_id_seq"', 1, false);
+
+
+--
+-- TOC entry 2867 (class 2606 OID 17158)
+-- Name: Compensation Compensation_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Compensation"
+    ADD CONSTRAINT "Compensation_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2865 (class 2606 OID 17149)
+-- Name: Employee Employee_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Employee"
+    ADD CONSTRAINT "Employee_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2868 (class 2606 OID 17159)
+-- Name: Compensation Compensation_employee_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Compensation"
+    ADD CONSTRAINT "Compensation_employee_id_fkey" FOREIGN KEY (employee_id) REFERENCES public."Employee"(id) ON UPDATE CASCADE;
+
+
+-- Completed on 2020-12-13 03:09:04
+
+--
+-- PostgreSQL database dump complete
+--
+
